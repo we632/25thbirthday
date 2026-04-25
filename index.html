@@ -3464,9 +3464,159 @@ body.stars-on-top::after{
   border-color:rgba(80,40,20,.6);
   background:rgba(220,180,130,.3);
 }
+
+#password-gate{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(120vmax 80vmax at 20% 10%, rgba(168,130,255,.24), transparent 65%),
+    radial-gradient(90vmax 70vmax at 85% 88%, rgba(255,171,221,.18), transparent 68%),
+    linear-gradient(180deg, rgba(8,7,24,.95), rgba(6,5,18,.98));
+  backdrop-filter:blur(8px);
+}
+#password-gate[hidden]{
+  display:none !important;
+}
+.password-gate-stars{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.password-gate-stars::before,
+.password-gate-stars::after{
+  content:'';
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(circle at 10% 24%, rgba(250,245,255,.85) 0 1px, transparent 1.8px) 0 0/180px 180px,
+    radial-gradient(circle at 78% 12%, rgba(255,236,248,.7) 0 1px, transparent 1.8px) 0 0/220px 220px,
+    radial-gradient(circle at 68% 64%, rgba(244,224,255,.65) 0 .9px, transparent 1.7px) 0 0/200px 200px,
+    radial-gradient(circle at 26% 74%, rgba(234,214,255,.62) 0 .8px, transparent 1.6px) 0 0/160px 160px;
+}
+.password-gate-stars::before{
+  opacity:.7;
+  animation:gateStarDrift 18s linear infinite;
+}
+.password-gate-stars::after{
+  opacity:.4;
+  transform:scale(1.18);
+  animation:gateStarDrift 25s linear infinite reverse;
+}
+.password-gate-nebula{
+  position:absolute;
+  width:120vmax;
+  height:120vmax;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  pointer-events:none;
+  background:
+    radial-gradient(44% 30% at 25% 30%, rgba(141,113,238,.22), transparent 75%),
+    radial-gradient(40% 26% at 74% 66%, rgba(255,173,223,.18), transparent 72%);
+  filter:blur(6px);
+  animation:gateNebulaPulse 8.6s ease-in-out infinite;
+}
+.password-gate-card{
+  position:relative;
+  width:min(420px, 100%);
+  border:1px solid rgba(232,205,255,.35);
+  border-radius:20px;
+  background:
+    radial-gradient(120% 130% at 16% 0%, rgba(255,208,235,.12), transparent 42%),
+    radial-gradient(120% 130% at 100% 100%, rgba(159,126,255,.14), transparent 46%),
+    rgba(15,10,33,.84);
+  box-shadow:0 26px 62px rgba(0,0,0,.44), inset 0 0 28px rgba(176,139,255,.1);
+  backdrop-filter:blur(8px);
+  padding:22px 18px 18px;
+}
+.password-gate-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(140deg, rgba(255,220,245,.42), rgba(186,156,255,.28), rgba(255,220,245,.24));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.password-gate-title{
+  font-size:1.12rem;
+  letter-spacing:.03em;
+  color:rgba(248,238,255,.96);
+}
+.password-gate-sub{
+  margin-top:8px;
+  color:rgba(240,224,255,.7);
+  line-height:1.7;
+  font-size:.9rem;
+}
+.password-gate-row{
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+}
+#password-input{
+  flex:1;
+  height:42px;
+  border-radius:10px;
+  border:1px solid rgba(232,205,255,.35);
+  background:rgba(10,8,26,.85);
+  color:rgba(248,238,255,.95);
+  font-size:1rem;
+  padding:0 12px;
+  outline:none;
+}
+#password-input:focus{
+  border-color:rgba(255,216,240,.75);
+  box-shadow:0 0 0 2px rgba(255,188,226,.15);
+}
+#password-submit{
+  min-width:88px;
+  border:1px solid rgba(233,198,255,.55);
+  border-radius:10px;
+  background:linear-gradient(140deg, rgba(147,114,238,.78), rgba(226,145,199,.74));
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+#password-error{
+  min-height:18px;
+  margin-top:10px;
+  font-size:.82rem;
+  color:rgba(255,170,186,.95);
+}
+@keyframes gateStarDrift{
+  from{ transform:translate3d(0,0,0); }
+  to{ transform:translate3d(-60px,-45px,0); }
+}
+@keyframes gateNebulaPulse{
+  0%,100%{ opacity:.72; transform:translate(-50%, -50%) scale(1); }
+  50%{ opacity:.98; transform:translate(-50%, -50%) scale(1.04); }
+}
 </style>
 </head>
 <body>
+<div id="password-gate" role="dialog" aria-modal="true" aria-label="网站访问密码">
+  <div class="password-gate-stars" aria-hidden="true"></div>
+  <div class="password-gate-nebula" aria-hidden="true"></div>
+  <div class="password-gate-card">
+    <div class="password-gate-title">请输入进入密码</div>
+    <div class="password-gate-sub">银河门已开启，请输入通行密码进入你的生日星图。</div>
+    <div class="password-gate-row">
+      <input id="password-input" type="password" inputmode="numeric" placeholder="请输入密码" autocomplete="off">
+      <button id="password-submit" type="button">进入</button>
+    </div>
+    <div id="password-error" aria-live="polite"></div>
+  </div>
+</div>
 <canvas id="star-canvas"></canvas>
 <div id="meteor-header" aria-hidden="true"></div>
 <div id="meteors-layer" aria-hidden="true"></div>
@@ -8799,8 +8949,13 @@ function runBirthdayCelebration(durationMs=5200){
   BIRTHDAY_INTRO_STATE.celebrateCleanup = cleanup;
 }
 
-// 启动判定
-if(document.readyState === 'complete' || document.readyState === 'interactive'){
+const ACCESS_PASSWORD = '20260425';
+const ACCESS_SESSION_KEY = 'birthday-map-access-20260425';
+let APP_BOOTED = false;
+
+function bootAppOnce(){
+  if(APP_BOOTED) return;
+  APP_BOOTED = true;
   setTimeout(()=>{
     FINAL_LETTER_TRIGGERED = isFinalLetterAvailable();
     FINAL_LETTER_PENDING_REVEAL = false;
@@ -8809,18 +8964,60 @@ if(document.readyState === 'complete' || document.readyState === 'interactive'){
     maybeStartBirthdayIntroFromTiming();
     tickClock();
   }, 120);
-}else{
-  document.addEventListener('DOMContentLoaded', ()=>{
-    setTimeout(()=>{
-      FINAL_LETTER_TRIGGERED = isFinalLetterAvailable();
-      FINAL_LETTER_PENDING_REVEAL = false;
-      updateTitleHeartEntrances();
-      scheduleBirthdayIntroWatcher();
-      maybeStartBirthdayIntroFromTiming();
-      tickClock();
-    }, 120);
-  }, {once:true});
 }
+
+function waitDomThenBoot(){
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){
+    bootAppOnce();
+  }else{
+    document.addEventListener('DOMContentLoaded', bootAppOnce, {once:true});
+  }
+}
+
+function initPasswordGate(){
+  const gate = document.getElementById('password-gate');
+  const input = document.getElementById('password-input');
+  const submit = document.getElementById('password-submit');
+  const error = document.getElementById('password-error');
+  if(!gate || !input || !submit || !error){
+    waitDomThenBoot();
+    return;
+  }
+
+  const unlock = ()=>{
+    sessionStorage.setItem(ACCESS_SESSION_KEY, 'ok');
+    gate.hidden = true;
+    error.textContent = '';
+    waitDomThenBoot();
+  };
+
+  if(sessionStorage.getItem(ACCESS_SESSION_KEY) === 'ok'){
+    unlock();
+    return;
+  }
+
+  const attemptUnlock = ()=>{
+    const pwd = input.value.trim();
+    if(pwd === ACCESS_PASSWORD){
+      unlock();
+      return;
+    }
+    error.textContent = '密码不正确，请重试。';
+    input.value = '';
+    input.focus();
+  };
+
+  submit.addEventListener('click', attemptUnlock);
+  input.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      attemptUnlock();
+    }
+  });
+  setTimeout(()=>input.focus(), 60);
+}
+
+initPasswordGate();
 
 </script>
 </body>
